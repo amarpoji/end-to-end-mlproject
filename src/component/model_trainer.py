@@ -51,11 +51,54 @@ class ModelTrainer:
 
       }
 
+      params = {
+      "Decision Tree": {
+        'criterion': ['squared_error', 'friedman_mse', 'absolute_error', 'poisson']  # ✅ fixed typo here
+          # "splitter" : ['best, 'random]
+          # "max_features": ["sqrt", "log2"]
+        },
+
+        'Random Forest' : {
+          # 'criterion' : ['squared error', 'friedman_mse', 'absolute error', 'poison'],
+          # "max_features": ["sqrt", "log2", "None"],
+          'n_estimators' : [8,16,32,64,128,256]
+        },
+        "Gradient Boosting" :{
+          # 'loss' : ['squared_error', 'huber', 'absolute_error', 'quantile'],
+          'learning_rate' :[.1,.01,.05,.001],
+          'subsample' : [0.6,0.7,0.75,0.8,0.85,0.9],
+          # 'criterion' : ['squared_error', 'friedman_mse']
+          # 'max_features ' : ["auto", "sqrt", "log2"],
+          'n_estimators' : [8,26,32,64,128,256]
+        },
+        "Linear Regression": {},
+        "K-Neighbors Regressor" : {
+          'n_neighbors' : [5,7,9,11],
+          'weights' : ['uniform', 'distance'],
+          'algorithm': ['ball_tree', 'kd_tree', 'brute']
+        },
+        'XGBoost Regressor' : {
+          'learning_rate' : [.1,.01,.05,.001],
+          'n_estimators' : [8,16,32,64,128,256]
+        },
+        "CatBoost Regressor" :{
+          'depth' : [6,8,10],
+          'learning_rate' : [.1,.01,.05,.001],
+          'iterations' : [30,50,100]
+        },
+        'AdaBoost Regressor' : {
+        'learning_rate' : [.1,.01,.05,.001],
+        'loss' : ['linear', 'square', 'exponential'],
+        'n_estimators' : [8,16,32,64,128,256]
+        }
+      } 
+
       
       model_report: dict = evaluate_models(
           X_train=X_train, y_train=y_train,
           X_test=X_test, y_test=y_test,
-          models=models
+          models=models,
+          params = params
          )
 
       ## to get the best model score from dict
@@ -79,6 +122,8 @@ class ModelTrainer:
         file_path = self.model_trainer_config.trained_model_file_path,
         obj= best_model
       )
+
+      best_model = best_model.fit(X_train,y_train)
 
       predicted = best_model.predict(X_test)
       r2_square = r2_score(y_test,predicted)
