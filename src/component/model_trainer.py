@@ -111,6 +111,7 @@ class ModelTrainer:
       best_model_name = max(model_report, key=model_report.get)
         
       best_model = models[best_model_name]
+      best_model = best_model.fit(X_train,y_train)
 
       if best_model_score <0.6:
         raise CustomException("No best model found")
@@ -123,7 +124,6 @@ class ModelTrainer:
         obj= best_model
       )
 
-      best_model = best_model.fit(X_train,y_train)
 
       predicted = best_model.predict(X_test)
       r2_square = r2_score(y_test,predicted)
