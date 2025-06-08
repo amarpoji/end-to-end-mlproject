@@ -1,0 +1,17 @@
+version: 0.2
+
+phases:
+  install:
+    commands:
+      - echo Installing dependencies...
+      - pip install --upgrade pip
+      - pip install -r requirements.txt -t ./package
+
+  build:
+    commands:
+      - echo Build complete.
+
+artifacts:
+  files:
+    - '**/*'
+  base-directory: .
